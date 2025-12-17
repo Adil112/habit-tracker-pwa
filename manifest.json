@@ -1,0 +1,21 @@
+{
+  "short_name": "Habit Tracker",
+  "name": "Habit Tracker",
+  "icons": [
+    {
+      "src": "/habit-tracker-pwa/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/habit-tracker-pwa/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/habit-tracker-pwa/",
+  "scope": "/habit-tracker-pwa/",
+  "display": "standalone",
+  "theme_color": "#5B86E5",
+  "background_color": "#F7F8FC"
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="manifest" href="/habit-tracker-pwa/manifest.json">
+    <link rel="icon" type="image/png" href="/habit-tracker-pwa/icon-192x192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Tracker</title>
+    <link rel="manifest" href="/habit-tracker-pwa/manifest.json" />
+    <meta name="theme-color" content="#5B86E5" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'primary': '#5B86E5',
+              'primary-dark': '#3652A3',
+              'background': '#F7F8FC',
+              'card': '#FFFFFF',
+              'text-primary': '#2D3748',
+              'text-secondary': '#718096',
+              'divider': '#E2E8F0',
+              'success': '#48BB78',
+              'danger': '#F56565',
+              'warning': '#ECC94B',
+              'skip': '#A0AEC0',
+
+              'dark-background': '#1A202C',
+              'dark-card': '#2D3748',
+              'dark-text-primary': '#F7FAFC',
+              'dark-text-secondary': '#A0AEC0',
+              'dark-divider': '#4A5568',
+            },
+          }
+        }
+      }
+    </script>
+
+<link rel="stylesheet" href="/index.css">
+  <script type="importmap">
+{
+  "imports": {
+    "recharts": "https://esm.sh/recharts@^3.6.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/habit-tracker-pwa/assets/index-BqwHZxkI.js"></script>
+</head>
+  <body class="bg-background dark:bg-dark-background">
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/habit-tracker-pwa/sw.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+        });
+      }
+    </script>
+</body>
+</html>
