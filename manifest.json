@@ -1,21 +1,21 @@
 {
-  "short_name": "Habit Tracker",
   "name": "Habit Tracker",
-  "icons": [
-    {
-      "src": "/habit-tracker-pwa/icon-192x192.png",
-      "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "/habit-tracker-pwa/icon-512x512.png",
-      "type": "image/png",
-      "sizes": "512x512"
-    }
-  ],
+  "short_name": "Habit Tracker",
   "start_url": "/habit-tracker-pwa/",
   "scope": "/habit-tracker-pwa/",
   "display": "standalone",
   "theme_color": "#5B86E5",
-  "background_color": "#F7F8FC"
+  "background_color": "#F7F8FC",
+  "icons": [
+    {
+      "src": "/habit-tracker-pwa/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/habit-tracker-pwa/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
