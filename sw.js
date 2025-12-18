@@ -46,3 +46,37 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request).then((cached) => cached || fetch(event.request))
   );
 });
+
+self.addEventListener('push', event => {
+  const data = event.data?.json() || {};
+
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'Habit Tracker', {
+      body: data.body || 'Новое уведомление',
+      icon: '/habit-tracker-pwa/icon-192x192.png',
+      badge: '/habit-tracker-pwa/icon-192x192.png',
+      data: {
+        url: '/habit-tracker-pwa/',
+      },
+    })
+  );
+});
+
+
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+
+  event.waitUntil(
+    clients.matchAll({
+      type: 'window',
+      includeUncontrolled: true,
+    }).then(clientList => {
+      for (const client of clientList) {
+        if (client.url.includes('/habit-tracker-pwa/') && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      return clients.openWindow('/habit-tracker-pwa/');
+    })
+  );
+});
