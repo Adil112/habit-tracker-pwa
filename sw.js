@@ -1,60 +1,48 @@
 const BASE = '/habit-tracker-pwa';
-const CACHE = 'habit-tracker-v1';
+const CACHE = 'habit-tracker-v2'; // меняй версию при важных изменениях
 
-// self.addEventListener('install', event => {
-//   event.waitUntil(
-//     caches.open(CACHE).then(cache =>
-//       cache.addAll([
-//         `${BASE}/`,
-//         `${BASE}/index.html`,
-//         `${BASE}/icon-192x192.png`,
-//         `${BASE}/icon-512x512.png`,
-//         `${BASE}/privacy.html`,
-//         `${BASE}/terms.html`,
-//       ])
-//     )
-//   );
-// });
-// // Install the service worker and cache the app shell
-// self.addEventListener('install', event => {
-//   event.waitUntil(
-//     caches.open(CACHE_NAME)
-//       .then(cache => {
-//         console.log('Opened cache');
-//         // Use { cache: 'reload' } to ensure we fetch the latest version from the network.
-//         const requests = URLS_TO_CACHE.map(url => new Request(url, { cache: 'reload' }));
-//         return cache.addAll(requests);
-//       })
-//       .catch(err => {
-//         console.error('Failed to cache resources:', err);
-//       })
-//   );
-// });
+const CORE = [
+  `${BASE}/`,
+  `${BASE}/index.html`,
+  `${BASE}/manifest.json`,
+  `${BASE}/icon-192x192.png`,
+  `${BASE}/icon-512x512.png`,
+  `${BASE}/privacy.html`,
+  `${BASE}/terms.html`,
+];
 
-// self.addEventListener('fetch', event => {
-//   event.respondWith(
-//     caches.match(event.request).then(res => res || fetch(event.request))
-//   );
-// });
-
-self.addEventListener('install', () => {
+// 1) install: кладём в кэш ядро, но НЕ падаем из-за одного файла
+self.addEventListener('install', (event) => {
   self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE).then(async (cache) => {
+      await Promise.allSettled(CORE.map((url) => cache.add(url)));
+    })
+  );
 });
 
-self.addEventListener('fetch', () => {});
+// 2) activate: чистим старые кэши
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    (async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+      await self.clients.claim();
+    })()
+  );
+});
 
-// // Clean up old caches
-// self.addEventListener('activate', event => {
-//   const cacheWhitelist = [CACHE_NAME];
-//   event.waitUntil(
-//     caches.keys().then(cacheNames => {
-//       return Promise.all(
-//         cacheNames.map(cacheName => {
-//           if (cacheWhitelist.indexOf(cacheName) === -1) {
-//             return caches.delete(cacheName);
-//           }
-//         })
-//       );
-//     })
-//   );
-// });
+// 3) fetch: cache-first для своего домена, остальное — мимо
+self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // не трогаем сторонние домены (tailwind cdn и т.п.)
+  if (url.origin !== self.location.origin) return;
+
+  // трогаем только свой scope
+  if (!url.pathname.startsWith(`${BASE}/`)) return;
+
+  event.respondWith(
+    caches.match(event.request).then((cached) => cached || fetch(event.request))
+  );
+});
